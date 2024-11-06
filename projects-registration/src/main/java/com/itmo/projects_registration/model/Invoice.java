@@ -3,6 +3,7 @@ package com.itmo.projects_registration.model;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -72,7 +73,7 @@ public class Invoice {
 		this.invoiceDate = invoiceDate;
 	}
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY )
 	@JoinColumn(name="managerId")
 	private Manager managerId;
 

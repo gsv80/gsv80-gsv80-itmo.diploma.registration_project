@@ -1,13 +1,12 @@
 package com.itmo.projects_registration;
 
 import java.util.Arrays;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,45 +17,56 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import static org.springframework.security.config.Customizer.withDefaults;
 import com.itmo.projects_registration.security.UserDetailsServiceImpl;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig{
 	
 	private final UserDetailsServiceImpl userDetailsService;
 	private final AuthenticationFilter authenticationFilter;
 	private final AuthEntryPoint exceptionHandler;
 	
-	private static final String[] SWAGGER_PATHS = {"/api-docs/**", "/swagger-ui/**"};
+	private static final String[] SWAGGER_PATHS = {
+			"/**swagger**/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/v2/api-docs",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"	
+	};
 	
 	public SecurityConfig(UserDetailsServiceImpl userDetailsService,AuthenticationFilter authenticationFilter,  AuthEntryPoint exceptionHandler){ 
 		this.userDetailsService = userDetailsService;
 		this.exceptionHandler = exceptionHandler;
 		this.authenticationFilter = authenticationFilter;
 	}
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-	      throws Exception {
-	        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
-	}
     
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf((csrf) -> csrf.disable()).cors(withDefaults())
+		http.csrf((csrf) -> csrf.disable())
+		.cors(withDefaults())
         .sessionManagement((sessionManagement) -> sessionManagement
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests.requestMatchers(
+        
+        .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+		.requestMatchers(
     		HttpMethod.POST, "/login").permitAll()
-		.requestMatchers(SWAGGER_PATHS).permitAll()
+		.requestMatchers( SWAGGER_PATHS).permitAll()
 		.anyRequest().authenticated())
         .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling((exceptionHandling) -> exceptionHandling
-    		.authenticationEntryPoint(exceptionHandler));
+        		.authenticationEntryPoint(exceptionHandler));
 
 	    return http.build();
+	}
+	
+	
+	public void configureGlobal(AuthenticationManagerBuilder auth)
+			throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 	}
 	
 	@Bean
@@ -74,8 +84,8 @@ public class SecurityConfig {
 	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	    CorsConfiguration config = new CorsConfiguration();
 	    config.setAllowedOrigins(Arrays.asList("*"));
-	    config.setAllowedMethods(Arrays.asList("*"));
-	    config.setAllowedHeaders(Arrays.asList("*"));
+		config.setAllowedMethods(Arrays.asList("*"));
+		config.setAllowedHeaders(Arrays.asList("*"));
 	    config.setAllowCredentials(false);
 	    config.applyPermitDefaultValues();
 	    

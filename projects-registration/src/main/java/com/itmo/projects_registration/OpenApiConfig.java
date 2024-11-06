@@ -13,9 +13,18 @@ public class OpenApiConfig {
     public OpenAPI registrationsDatabaseOpenAPI() {
         return new OpenAPI()
             .info(new Info()
-    		.title("Project registrations REST API")
-    		.description("A company registrations manager app")
-    		.version("1.0"));
-	}
+	    		.title("Project registrations REST API")
+	    		.description("A company registrations manager app")
+	    		.version("1.0"));
+		}
+	
+//	 @Bean
+//	    public GroupedOpenApi publicApi() {
+//	        return GroupedOpenApi.builder()
+//	            .group("public")
+//	            .pathsToMatch("/**")
+//	            .build();
+//	    }
+
 
 }
