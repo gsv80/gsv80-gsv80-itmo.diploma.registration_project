@@ -1,5 +1,7 @@
 package com.itmo.projects_registration.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -8,57 +10,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 
 import com.itmo.projects_registration.model.Company;
 import com.itmo.projects_registration.model.Invoice;
 import com.itmo.projects_registration.model.Manager;
 import com.itmo.projects_registration.model.Place;
 import com.itmo.projects_registration.model.Registration;
+import com.itmo.projects_registration.model.RoleEnum;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class RegistrationRepositoryTests {
 	
-
+	@Autowired
 	private RegistrationRepository registrationRepository;
 
-	@Autowired
-	public RegistrationRepositoryTests(RegistrationRepository registrationRepository) {	
-		this.registrationRepository = registrationRepository;
-	}
-	
-	
-//	RegistrationConstructor (String registrationId, Manager creator, Manager responsibleManager,
-//			Place place, Company client, List<Invoice> invoices, boolean registrationState)
 	
 	@Test
-	public void RegistrationRepository_SaveAll_ReturnSavedRegistration() {
+	void saveRegistrationTest() {
+		
+		Registration registration = new Registration();
+		registrationRepository.save(registration);
+		assertThat(registrationRepository.findAll().size()).isGreaterThan(0);
+	}
+	
+	@Test
+	public void RegistrationRepositorySaveAllReturnSavedRegistration() {
 		
 		Registration registration1 = new Registration("testNum", new Manager(), new Manager(), new Place(), new Company(), null, true);
+		Registration registration2 = new Registration();
 		
-		Registration savedRegistration = registrationRepository.save(registration1);
+		registrationRepository.save(registration1);
+		registrationRepository.save(registration2);
 		
-		Assertions.assertThat(savedRegistration).isNotNull();
-		Assertions.assertThat(savedRegistration.getRegistrationId()).isEqualTo("testNum");
-		Assertions.assertThat(savedRegistration.getId()).isGreaterThan(0);
+		assertThat(registrationRepository.findAll().size()).isEqualTo(2);
+		assertThat(registrationRepository.findByRegistrationId("testNum").size()).isEqualTo(1);
 		
 	}
 	
-	@Test
-	public void RegistrationRepository_ListAll_ReturnMoreThanOneRegistration() {
-		
-		Registration registration1 = new Registration("testNum3", new Manager(), new Manager(), new Place(), new Company(), null, true);
-		Registration registration2 = new Registration("testNum2", new Manager(), new Manager(), new Place(), new Company(), null, false);
-		
-		Registration savedOne = registrationRepository.save(registration1);
-		Registration savedTwo = registrationRepository.save(registration2);
-		
-//		List<Registration> registrationsList = registrationRepository.findAll();
-		
-//		Assertions.assertThat(registrationsList).isNotNull();
-		Assertions.assertThat(savedTwo).isNotNull();
-		Assertions.assertThat(savedTwo.getRegistrationId()).isEqualTo("testNum2");
-//		Assertions.assertThat(registrationsList.size()).isEqualTo(5);//
-		
-	}
+
+	
+	
 }

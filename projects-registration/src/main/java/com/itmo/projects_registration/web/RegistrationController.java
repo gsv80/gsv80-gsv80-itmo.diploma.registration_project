@@ -14,23 +14,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itmo.projects_registration.model.Registration;
 import com.itmo.projects_registration.service.RegistrationService;
 
 @RestController
+@RequestMapping("api/registrations")
 public class RegistrationController {
 
 	@Autowired
-	private RegistrationService service;
+	private final RegistrationService service;
 	
-	@GetMapping("/registrations")
+	public RegistrationController(RegistrationService service) {
+		this.service = service;
+	}
+	
+	@PostMapping("/search/example")
+	public List<Registration> findByExample(@RequestBody Registration registration){
+		return service.findRegistrationByExample(registration);
+	}
+
+	@GetMapping()
     public List<Registration> listAll() {
 		return service.listAll(); 
 	}
 	
-	@GetMapping("/registrations/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<Registration> read(@PathVariable("id") Long id) {
 		
 		try {
@@ -42,12 +53,12 @@ public class RegistrationController {
 		}
 	}
 	
-	@PostMapping("/registrations")
+	@PostMapping()
 	public void create(@RequestBody Registration registration) {
 		service.save(registration);
 	}
 	
-	@PutMapping("/registrations/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<Registration> update(@RequestBody Registration registration, @PathVariable("id") Long id) {
 		try{
 			Registration existRegistration = service.get(id);
@@ -59,14 +70,14 @@ public class RegistrationController {
 		}
 	}
 	
-	@DeleteMapping("/registrations/{id}")
+	@DeleteMapping("/{id}")
 	public void delete( @PathVariable("id") Long id) {
 		service.delete(id);		
 	}
 	
 	// logic for application  
 
-	@GetMapping("/registrations/client")
+	@GetMapping("/client")
 	public ResponseEntity<Registration> findByClient(@RequestBody Registration registration, @PathVariable("client") String client){
 		
 		return new ResponseEntity<Registration>(registration , HttpStatus.OK);

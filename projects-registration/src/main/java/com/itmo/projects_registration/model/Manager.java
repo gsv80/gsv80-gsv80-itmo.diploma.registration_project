@@ -44,10 +44,10 @@ public class Manager extends Person {
 	@Column(nullable=false, updatable=false)
 	private Long managerId;
 	
-	@Column(nullable = false, unique = true)
+//	@Column(nullable = false, unique = true)
 	private String username;
 	
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	private String password;
 	
 	public Long getManagerId() {

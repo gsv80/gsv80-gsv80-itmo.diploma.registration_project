@@ -72,7 +72,7 @@ public class ProjectsRegistrationApplication implements CommandLineRunner {
 		
 		Equipment equipment1 = new Equipment("WQ" );
 		Equipment equipment2 = new Equipment("SSC");
-		equipRepo.saveAll(Arrays.asList(equipment1, equipment2));
+		//equipRepo.saveAll(Arrays.asList(equipment1, equipment2));
 		
 		Department depTech = new Department("Tech support");
 		Department depSales = new Department("Sales");
@@ -84,17 +84,17 @@ public class ProjectsRegistrationApplication implements CommandLineRunner {
 		
 		Company company1 = new Company("TD sales", "OOO", 1234567890L, "sales");
 		Company company2 = new Company("Vodokanal Tver", "MUP", 1234567891L, "end user");
-		companyRepo.saveAll(Arrays.asList(company1, company2));
+	//	companyRepo.saveAll(Arrays.asList(company1, company2));
 		
 		Contact contact1 = new Contact("Anton", "Gavrilin", "Sales Manager", company1, 9031234567L);
 		Contact contact2 = new Contact("Kirill", "Vasilkov", "Sales Manager", company1, 9031234568L, 4951234567L);
 		Contact contact3 = new Contact("Michail", "Dynin", "Engineer", company2, 9271234567L);
-		contactRepo.saveAll(Arrays.asList(contact1, contact2, contact3));
+		//contactRepo.saveAll(Arrays.asList(contact1, contact2, contact3));
 		
 		Place place1 = new Place("Tverskaya", "Tver", "Moskovskoe av.", "1", 123456, "KNS-1", company2);
 		Place place2 = new Place("Tverskaya", "Tver", "Pobedy av.", "65 ", 123456, "KNS-2", company2);
 		Place place3 = new Place("Tverskaya", "Tver", "Moskovskoe av.", "11B ", 123456, "KNS-5", company2);
-		placeRepo.saveAll(Arrays.asList(place1, place2, place3));
+		//placeRepo.saveAll(Arrays.asList(place1, place2, place3));
 		
 		
 		
@@ -104,7 +104,7 @@ public class ProjectsRegistrationApplication implements CommandLineRunner {
 		Equipment equipment4 = new Equipment("SSC-G");
 		
 		
-		equipRepo.saveAll(Arrays.asList(equipment1, equipment2));
+		//equipRepo.saveAll(Arrays.asList(equipment1, equipment2));
 		reg1.addEquipment(equipment3);
 		reg1.addEquipment(equipment2);
 		
@@ -115,13 +115,13 @@ public class ProjectsRegistrationApplication implements CommandLineRunner {
 		reg3.addEquipment(equipment1);
 		
 		
-		registrRepo.saveAll(Arrays.asList(reg1, reg2, reg3));
+		//registrRepo.saveAll(Arrays.asList(reg1, reg2, reg3));
 		
 		Invoice invoice1 = new Invoice("PPI-060924-1112", 110000D, true, manager1, reg1);
 		Invoice invoice2 = new Invoice("PPI-060924-1114", 1000D, false, manager2, reg1);
 		Invoice invoice3 = new Invoice("PPI-060924-1116", 110000D, false, manager1, reg2);
 		Invoice invoice4 = new Invoice("PPI-060924-1123", 60000D, false, manager1, reg3);
-		invoiceRepo.saveAll(Arrays.asList(invoice1, invoice2, invoice3, invoice4));
+		//invoiceRepo.saveAll(Arrays.asList(invoice1, invoice2, invoice3, invoice4));
 		
 		for (Equipment equipment : equipRepo.findAll()) {
 	        logger.info("type: {}",

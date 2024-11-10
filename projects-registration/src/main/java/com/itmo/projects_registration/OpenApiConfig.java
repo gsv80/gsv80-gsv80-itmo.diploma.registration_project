@@ -17,14 +17,5 @@ public class OpenApiConfig {
 	    		.description("A company registrations manager app")
 	    		.version("1.0"));
 		}
-	
-//	 @Bean
-//	    public GroupedOpenApi publicApi() {
-//	        return GroupedOpenApi.builder()
-//	            .group("public")
-//	            .pathsToMatch("/**")
-//	            .build();
-//	    }
-
 
 }

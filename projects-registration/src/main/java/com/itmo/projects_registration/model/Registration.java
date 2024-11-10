@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -53,33 +54,43 @@ public class Registration {
 	private Date creationDate;
 	private Date relizeDate;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY
+			, cascade = {CascadeType.ALL}
+	)
 	@JoinColumn(name="creator", referencedColumnName= "managerId")
 	private Manager creator;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY
+			, cascade = {CascadeType.ALL}
+	)
 	@JoinColumn(name="responsibleManager", referencedColumnName= "managerId")
 	private Manager responsibleManager;
 	
 	private Date prolongationTime;
 	
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY
+			, cascade = {CascadeType.ALL}
+	)
 	@JoinColumn(name="place", referencedColumnName= "placeId")
 	private Place place;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY
+			, cascade = {CascadeType.ALL}
+	)
 	@JoinColumn(name="client", referencedColumnName= "companyId")
 	private Company client;
 	
 	@JsonIgnore
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="registration")
+	@OneToMany(cascade=CascadeType.ALL
+//	, mappedBy="registration"
+	)
 	private List<Invoice> invoices;
 	
 	private boolean registrationState;
 	
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "registrations")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "registrations", cascade = {CascadeType.ALL})
     private Set<Equipment> equipments = new HashSet<>();
 	
 	public void addEquipment(Equipment equipment){
@@ -102,7 +113,8 @@ public class Registration {
 	public String getRegistrationId() {
 		return registrationId;
 	}
-
+	
+	@Column(unique = true)
 	public void setRegistrationId(String registrationId) {
 		this.registrationId = registrationId;
 	}
@@ -186,6 +198,80 @@ public class Registration {
 
 	public void setEquipments(Set<Equipment> equipments) {
 		this.equipments = equipments;
+	}
+	
+	
+	public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final Registration registration;
+        
+        private Builder() {
+            registration = new Registration();
+        }
+        
+        
+        public Builder id (Long id) {
+        	registration.id = id;
+        	return this;
+        }
+        
+        public Builder registrationId(String registrationId) {
+        	registration.registrationId= registrationId;
+        	return this;
+        }
+        
+    	public Builder creationDate(Date creationDate) {
+    		registration.creationDate = creationDate;
+    		return this;
+    	}
+    	
+    	public Builder relizeDate(Date relizeDate) {
+    		registration.relizeDate = relizeDate;
+    		return this;
+    	}
+        
+        public Builder creator(Manager creator) {
+        	registration.creator = creator;
+        	return this;
+        }
+        
+        public Builder responsibleManager(Manager responsibleManager) {
+        	registration.responsibleManager = responsibleManager;
+        	return this;
+        }
+        
+        public Builder prolongationTime(Date prolongationTime) {
+        	registration.prolongationTime = prolongationTime;
+        	return this;
+        }
+        
+        public Builder place(Place place) {
+        	registration.place = place;
+        	return this;
+        }
+        
+        public Builder client(Company client) {
+        	registration.client = client;
+        	return this;
+        }
+        
+        public Registration build() {
+        	return registration;
+        }
+
+       
+        
+    }
+
+	@Override
+	public String toString() {
+		return "Registration [id=" + id + ", registrationId=" + registrationId + ", creationDate=" + creationDate
+				+ ", relizeDate=" + relizeDate + ", creator=" + creator + ", responsibleManager=" + responsibleManager
+				+ ", prolongationTime=" + prolongationTime + ", place=" + place + ", client=" + client + ", invoices="
+				+ invoices + ", registrationState=" + registrationState + ", equipments=" + equipments + "]";
 	}
 
 }
